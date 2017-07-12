@@ -1,5 +1,6 @@
 const queries = require('../db/queries');
 const express = require('express');
+const valid = require('./valid');
 
 const router = express.Router();
 
@@ -19,19 +20,27 @@ router.get('/authors', (req,res,next) => {
 });
 
 
-router.get('/books_authors', (req,res,next) => {
+router.get('/books/authors', (req,res,next) => {
 	queries.getAllBooksAuthors().then(books => {
 		res.json(books);
 	})
 });
 
 router.post('/books', (req,res,next) => {
-	queries.createNewBook(req.body).then(book => {
-		res.json({
-			message: "Success!",
-			book
+	if(valid.book(req.body)) {
+		queries.createNewBook(req.body).then(book => {
+			res.json(book);
 		});
-	});
+	}
+});
+
+
+router.post('/books/authors', (req,res,next) => {
+	if(valid.bookAuthor) {
+		queries.createBookAuthor(req.body).then(book_author => {
+			res.json(book_author);
+		});
+	}
 });
 
 module.exports = router;

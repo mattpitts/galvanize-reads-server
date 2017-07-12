@@ -34,6 +34,9 @@ module.exports = {
 		});
 	},
 	createNewBook(book) {
-		return knex('books').insert(book);
+		return knex('books').insert(book, '*');
+	},
+	createBookAuthor(book_author) {
+		return knex('book_author').insert(book_author, '*');
 	}
 }
