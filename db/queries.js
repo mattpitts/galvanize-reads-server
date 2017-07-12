@@ -66,5 +66,11 @@ module.exports = {
 	},
 	deleteBook(id) {
 		return knex('books').where('id', id).del();
+	},
+	deleteBookAuthor(bookId, authorId) {
+		return knex('book_author').where({book_id: bookId, author_id: authorId}).del('*');
+	},
+	updateBook(id, book) {
+		return knex('books').where('id', id).update(book, '*');
 	}
 }

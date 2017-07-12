@@ -55,4 +55,20 @@ router.delete('/books/:id', (req,res,next) => {
 	});
 });
 
+
+router.delete('/books/:bookId/authors/:authorId', (req,res,next) => {
+	console.log('getting here');
+	console.log(req.params);
+	queries.deleteBookAuthor(req.params.bookId, req.params.authorId).then(response => {
+		res.json(response);
+	});
+});
+
+
+router.put('/books/:id', (req,res,next) => {
+	queries.updateBook(req.params.id, req.body).then(response => {
+		res.json(response);
+	});
+})
+
 module.exports = router;
