@@ -48,4 +48,11 @@ router.post('/books/authors', (req,res,next) => {
 	}
 });
 
+
+router.delete('/books/:id', (req,res,next) => {
+	queries.deleteBook(req.params.id).then(response => {
+		res.json(response);
+	});
+});
+
 module.exports = router;

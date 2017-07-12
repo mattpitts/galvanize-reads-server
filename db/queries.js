@@ -62,10 +62,8 @@ module.exports = {
 				return book[0];
 			})
 		});
+	},
+	deleteBook(id) {
+		return knex('books').where('id', id).del();
 	}
-	// getBookById(id) {
-	// 	return knex('books').where('id', id)
-	// 		.join('book_author', 'books.id', '=', 'book_id')
-	// 		.join('authors', 'book_author.author_id', '=', 'author.id');
-	// }
 }
