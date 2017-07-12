@@ -7,8 +7,13 @@ const router = express.Router();
 
 router.get('/books', (req,res,next) => {
 	queries.getAllBooks().then(books => {
-		console.log(books);
 		res.json(books);
+	});
+});
+
+router.get('/books/:id', (req,res,next) => {
+	queries.getBookById(req.params.id).then(book => {
+		res.json(book);
 	});
 });
 
