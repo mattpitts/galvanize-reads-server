@@ -32,5 +32,8 @@ module.exports = {
 				return book[0];
 			})
 		});
+	},
+	createNewBook(book) {
+		return knex('books').insert(book);
 	}
 }

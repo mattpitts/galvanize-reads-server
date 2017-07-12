@@ -25,4 +25,13 @@ router.get('/books_authors', (req,res,next) => {
 	})
 });
 
+router.post('/books', (req,res,next) => {
+	queries.createNewBook(req.body).then(book => {
+		res.json({
+			message: "Success!",
+			book
+		});
+	});
+});
+
 module.exports = router;
