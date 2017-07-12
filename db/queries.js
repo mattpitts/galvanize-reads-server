@@ -7,6 +7,7 @@ module.exports = {
 		return knex('authors');
 	},
 	getAllBooksAuthors() {
+		console.log('wowow');
 		return knex('book_author');
 	},
 	getAllBooks() {

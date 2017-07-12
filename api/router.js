@@ -25,10 +25,10 @@ router.get('/authors', (req,res,next) => {
 });
 
 
-router.get('/books/authors', (req,res,next) => {
+router.get('/books_authors', (req,res,next) => {
 	queries.getAllBooksAuthors().then(books => {
 		res.json(books);
-	})
+	});
 });
 
 router.post('/books', (req,res,next) => {
