@@ -146,10 +146,8 @@ module.exports = {
 					});
 				})
 			)
-		}).then(authors => {
-			return parsedAuthors = authors.map(author => {
-				return author;
-			})
+		}).then(author => {
+			return author[0][0] ? author[0][0] : author [0];
 		});
 	},
 	createAuthor(author) {
