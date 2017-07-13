@@ -11,8 +11,9 @@ router.get('/books', (req,res,next) => {
 	});
 });
 
+
 router.get('/books/:id', (req,res,next) => {
-	queries.getBookById(req.params.id).then(book => {
+	queries.getOneBook(req.params.id).then(book => {
 		res.json(book);
 	});
 });
@@ -25,12 +26,6 @@ router.get('/authors', (req,res,next) => {
 });
 
 
-router.get('/books_authors', (req,res,next) => {
-	queries.getAllBooksAuthors().then(books => {
-		res.json(books);
-	});
-});
-
 router.post('/books', (req,res,next) => {
 	if(valid.book(req.body)) {
 		queries.createNewBook(req.body).then(book => {
@@ -42,9 +37,21 @@ router.post('/books', (req,res,next) => {
 
 router.post('/books/authors', (req,res,next) => {
 	if(valid.bookAuthor) {
-		queries.createBookAuthor(req.body).then(book_author => {
-			res.json(book_author);
-		});
+		queries.getBookAuthor(req.body).then(author => {
+			console.log(author);
+			if(author.length > 0) {
+				console.log('exists');
+				res.json(author);
+			} else {
+				console.log('create');
+				queries.createBookAuthor(req.body).then(book_author => {
+					res.json(book_author);
+				});
+			}
+		})
+
+	} else {
+		next(new Error('Ivalid association'));
 	}
 });
 

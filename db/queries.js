@@ -9,6 +9,12 @@ module.exports = {
 					book.authors = [];
 					return knex('book_author').where('book_id', book.id).select('author_id')
 					.then(authors => {
+						// console.log('authors');
+						// console.log(authors);
+						if(authors.length < 1) {
+							// console.log(book);
+							return book;
+						} else {
 						return Promise.all(
 							authors.map(author => {
 								return knex('authors').where('id', author.author_id).first().then(result => {
@@ -16,44 +22,56 @@ module.exports = {
 									return book;
 								})
 							})
-						)
+						)}
 					});
 				})
 			)
 		}).then(books => {
-			return parsedBooks = books.map(book => {
-				return book[0];
-			})
+			return books.map(book => {
+				return book[0] ? book[0] : book;
+			});
 		});
+	},
+	getBooks() {
+		return knex('books');
 	},
 	createNewBook(book) {
 		return knex('books').insert(book, '*');
 	},
+	getBookAuthor(book_author) {
+		return knex('book_author').where(book_author);
+	},
 	createBookAuthor(book_author) {
 		return knex('book_author').insert(book_author, '*');
 	},
-	getBookById(id) {
+	getOneBook(id) {
 		return knex('books').where('id', id).then(books => {
 			return Promise.all(
 				books.map(book => {
 					book.authors = [];
-					return knex('book_author').where('book_id', book.id).select('author_id')
-					.then(authors => {
-						return Promise.all(
-							authors.map(author => {
-								return knex('authors').where('id', author.author_id).first().then(result => {
-									book.authors.push(result)
-									return book;
-								})
-							})
-						)
+					return knex('book_author').where('book_id', book.id).then(relations => {
+						// console.log(author);
+						if(relations.length < 1) {
+							return book;
+						} else {
+							return knex('book_author').where('book_id', book.id).select('author_id')
+							.then(authors => {
+								return Promise.all(
+									authors.map(author => {
+										return knex('authors').where('id', author.author_id).first().then(result => {
+											book.authors.push(result)
+											return book;
+										})
+									})
+								)
+							});
+						}
 					});
 				})
 			)
-		}).then(books => {
-			return parsedBooks = books.map(book => {
-				return book[0];
-			})
+		}).then(book => {
+			// console.log(book);
+			return book[0][0] ? book[0][0] : book[0];
 		});
 	},
 	deleteBook(id) {
@@ -135,7 +153,6 @@ module.exports = {
 		});
 	},
 	createAuthor(author) {
-		console.log(author);
 		return knex('authors').insert(author);
 	},
 	deleteAuthor(id) {
