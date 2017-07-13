@@ -90,9 +90,12 @@ router.get('/authors/:id', (req,res,next) => {
 });
 
 router.post('/authors', (req,res,next) => {
-	queries.createAuthor(req.body).then(response => {
-		res.json(response);
-	});
+	if(valid.author(req.body)) {
+		console.log('asdasd');
+		queries.createAuthor(req.body).then(response => {
+			res.json(response);
+		});
+	}
 });
 
 router.delete('/authors/:id', (req,res,next) => {

@@ -153,7 +153,7 @@ module.exports = {
 		});
 	},
 	createAuthor(author) {
-		return knex('authors').insert(author);
+		return knex('authors').insert(author, '*');
 	},
 	deleteAuthor(id) {
 		return knex('authors').where('id', id).del();
