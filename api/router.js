@@ -88,4 +88,16 @@ router.post('/authors', (req,res,next) => {
 	});
 });
 
+router.delete('/authors/:id', (req,res,next) => {
+	queries.deleteAuthor(req.params.id).then(response => {
+		res.json(response);
+	});
+});
+
+router.put('/authors/:id', (req,res,next) => {
+	queries.updateAuthor(req.params.id, req.body).then(response => {
+		res.json(response);
+	});
+});
+
 module.exports = router;

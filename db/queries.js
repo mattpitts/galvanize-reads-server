@@ -70,22 +70,36 @@ module.exports = {
 			return Promise.all(
 				authors.map(author => {
 					author.books = [];
-					return knex('book_author').where('author_id', author.id).select('book_id')
-					.then(books => {
-						return Promise.all(
-							books.map(book => {
-								return knex('books').where('id', book.book_id).first().then(result => {
-									author.books.push(result)
-									return author;
-								})
-							})
-						)
-					});
+					return knex('book_author').where('author_id', author.id).then(relations => {
+						// console.log(author);
+						if(relations.length < 1) {
+							return author
+						} else {
+
+							// console.log(author);
+							return knex('book_author').where('author_id', author.id).select('book_id')
+							.then(books => {
+								// console.log(author);
+								return Promise.all(
+									books.map(book => {
+										return knex('books').where('id', book.book_id).first().then(result => {
+											author.books.push(result)
+											// console.log(author);
+											return author;
+										})
+									})
+								)
+							});
+						}
+					})
 				})
 			)
 		}).then(authors => {
-			return parsedAuthors = authors.map(author => {
-				return author[0];
+			return authors.map(author => {
+				if(author.length > 0) {
+					return author[0];
+				} else
+				return author;
 			})
 		});
 	},
@@ -94,27 +108,40 @@ module.exports = {
 			return Promise.all(
 				authors.map(author => {
 					author.books = [];
-					return knex('book_author').where('author_id', author.id).select('book_id')
-					.then(books => {
-						return Promise.all(
-							books.map(book => {
-								return knex('books').where('id', book.book_id).first().then(result => {
-									author.books.push(result)
-									return author;
-								})
-							})
-						)
+					return knex('book_author').where('author_id', author.id).then(relations => {
+						// console.log(author);
+						if(relations.length < 1) {
+							return author
+						} else {
+							return knex('book_author').where('author_id', author.id).select('book_id')
+							.then(books => {
+								return Promise.all(
+									books.map(book => {
+										return knex('books').where('id', book.book_id).first().then(result => {
+											author.books.push(result)
+											return author;
+										})
+									})
+								)
+							});
+						}
 					});
 				})
 			)
 		}).then(authors => {
 			return parsedAuthors = authors.map(author => {
-				return author[0];
+				return author;
 			})
 		});
 	},
 	createAuthor(author) {
 		console.log(author);
-		return knex('authors').insert(author, '*');
+		return knex('authors').insert(author);
+	},
+	deleteAuthor(id) {
+		return knex('authors').where('id', id).del();
+	},
+	updateAuthor(id, author) {
+		return knex('authors').where('id', id).update(author, '*');
 	}
 }
