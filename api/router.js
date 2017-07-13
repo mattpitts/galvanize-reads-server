@@ -57,8 +57,6 @@ router.delete('/books/:id', (req,res,next) => {
 
 
 router.delete('/books/:bookId/authors/:authorId', (req,res,next) => {
-	console.log('getting here');
-	console.log(req.params);
 	queries.deleteBookAuthor(req.params.bookId, req.params.authorId).then(response => {
 		res.json(response);
 	});
@@ -70,5 +68,24 @@ router.put('/books/:id', (req,res,next) => {
 		res.json(response);
 	});
 })
+
+
+router.get('/authors', (req,res,next) => {
+	queries.getAllAuthors().then(response => {
+		res.json(response);
+	});
+});
+
+router.get('/authors/:id', (req,res,next) => {
+	queries.getOneAuthor(req.params.id).then(response => {
+		res.json(response);
+	});
+});
+
+router.post('/authors', (req,res,next) => {
+	queries.createAuthor(req.body).then(response => {
+		res.json(response);
+	});
+});
 
 module.exports = router;

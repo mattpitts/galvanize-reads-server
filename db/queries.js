@@ -2,14 +2,6 @@ const knex = require('./knex');
 
 
 module.exports = {
-
-	getAllAuthors() {
-		return knex('authors');
-	},
-	getAllBooksAuthors() {
-		console.log('wowow');
-		return knex('book_author');
-	},
 	getAllBooks() {
 		return knex('books').then(books => {
 			return Promise.all(
@@ -72,5 +64,57 @@ module.exports = {
 	},
 	updateBook(id, book) {
 		return knex('books').where('id', id).update(book, '*');
+	},
+	getAllAuthors() {
+		return knex('authors').then(authors => {
+			return Promise.all(
+				authors.map(author => {
+					author.books = [];
+					return knex('book_author').where('author_id', author.id).select('book_id')
+					.then(books => {
+						return Promise.all(
+							books.map(book => {
+								return knex('books').where('id', book.book_id).first().then(result => {
+									author.books.push(result)
+									return author;
+								})
+							})
+						)
+					});
+				})
+			)
+		}).then(authors => {
+			return parsedAuthors = authors.map(author => {
+				return author[0];
+			})
+		});
+	},
+	getOneAuthor(id) {
+		return knex('authors').where('id', id).then(authors => {
+			return Promise.all(
+				authors.map(author => {
+					author.books = [];
+					return knex('book_author').where('author_id', author.id).select('book_id')
+					.then(books => {
+						return Promise.all(
+							books.map(book => {
+								return knex('books').where('id', book.book_id).first().then(result => {
+									author.books.push(result)
+									return author;
+								})
+							})
+						)
+					});
+				})
+			)
+		}).then(authors => {
+			return parsedAuthors = authors.map(author => {
+				return author[0];
+			})
+		});
+	},
+	createAuthor(author) {
+		console.log(author);
+		return knex('authors').insert(author, '*');
 	}
 }
